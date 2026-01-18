@@ -1,0 +1,5 @@
+fastapi[all]
+dotenv
+
+langchain
+langchain-azure-ai
