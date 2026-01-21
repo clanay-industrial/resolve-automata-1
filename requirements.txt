@@ -1,5 +1,12 @@
 fastapi[all]
+uvicorn[standard]
 dotenv
 
 langchain
 langchain-azure-ai
+
+sqlmodel
+pyodbc
+pydantic
+azure-identity
+sqlalchemy

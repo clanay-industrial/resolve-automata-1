@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 load_dotenv()
 
+from services.sql import engine
 from services.agent import agent_service
 
 app = FastAPI()
