@@ -1,9 +1,7 @@
 # Resolve Automata
 
 Entry for Encode Hackathon: 
-
-Midway Checkpoint: 
-- 
+- Commit To Change: An AI Agents Hackathon
 
 ### Description 
 Resolve Automata is an agentic application which helps users keep track of and complete their new years resolutions.
@@ -47,7 +45,7 @@ Opik monitoring and tracking will be implemented this week.
 
 .env file
 ```
-
+# To complete
 ```
 
 ```bash
@@ -61,7 +59,7 @@ fastapi dev main.py
 ```
 
 TODO: 
-1. Finish off SQL DB Integration 
+1. Finish off SQL DB Integration - DONE
 2. Hosting for API in Azure - App Service? 
     - how to deploy - manually 
 3. Quick web page with: 
