@@ -79,6 +79,7 @@ TODO:
     - Migrate Database 
     - MCP server 
     - Authentication
+    - Mock SQL Database calls and test out statements
     - Tools: 
         - Web Search find out specific useful things related to the activity. 
     - Reminder functionality 

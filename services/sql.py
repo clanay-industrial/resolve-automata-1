@@ -5,6 +5,7 @@ from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 # from azure.identity import DefaultAzureCredential
 from sqlalchemy.pool import QueuePool
+from sqlalchemy import func
 
 # Get environment variables for service principal
 tenant_id = os.environ.get("AZURE_TENANT_ID")
@@ -100,6 +101,30 @@ async def get_completion_records_for_user(user: str):
         )
         results = session.exec(statement)
         return results.all()
+    
+async def get_activities_for_user(user: str) -> str:
+    with Session(engine) as session:
+        statement = (
+            select(CompletionRecord.activity)
+            .where(CompletionRecord.user == user)
+            .distinct()
+        )
+        results = session.exec(statement).all()
+
+        activities = [r for r in results]
+
+        return ", ".join(activities)
+    
+async def count_completion_records_for_user_for_activity(user: str, activity: str) -> int:
+    with Session(engine) as session:
+        statement = (
+            select(func.count())
+            .select_from(CompletionRecord)
+            .where(CompletionRecord.user == user)
+            .where(CompletionRecord.activity == activity)
+        )
+        result = session.exec(statement).one()
+        return int(result)
 
 async def get_completion_records_for_user_for_this_month(user: str):
     with Session(engine) as session:

@@ -4,7 +4,7 @@ import logging
 from langchain_azure_ai.chat_models import AzureAIChatCompletionsModel
 from langchain.agents import create_agent
 from langchain.messages import SystemMessage, HumanMessage
-from services.database_tools import search_database, log_to_database
+from services.database_tools import search_database_for_user_activity, log_activity_to_database
 
 sytem_prompt = SystemMessage(
     content=[
@@ -12,10 +12,13 @@ sytem_prompt = SystemMessage(
             "type": "text",
             "text": """
             You are a coach who helps people keep on track with their new year's resolutions. 
-            You keep score of the user's progress and provide encouragement and advice.
+            You keep track of the user's progress and provide encouragement and advice.
 
-            When responding to a user's message, keep the response short and conscise. 
+            When responding to a user's message, keep the response short and concise. 
             Tell them that you have logged their progress and give them feedback on how they are doing that week.
+
+            Upon receiving a message from the user search_database_for_user_activity to get their current activities.
+            Then log_activity_to_database to log the new record for that user. If the activity the user mention is similar to what the user has in the database already, log that activity again.
             """,
         }
     ]
@@ -37,7 +40,7 @@ class AgentService:
         self.agent = create_agent(
             model=self.model,
             system_prompt=sytem_prompt,
-            tools=[search_database, log_to_database]
+            tools=[search_database_for_user_activity, log_activity_to_database]
         )
         
     async def process_message(self, user: str, message: str) -> str:

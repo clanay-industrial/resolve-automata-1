@@ -15,13 +15,19 @@ print("Creating database and tables...")
 create_db_and_tables()
 
 # print("Testing adding to DB...")
-# asyncio.run(create_completion_record("test_user", "exercise"))
+# asyncio.run(create_completion_record("test_user", "painting"))
 
-# result = asyncio.run(get_completion_records_for_user("test_user"))
-# for r in result:
-#     print(r)
-#     print(r.date.month)
+# # result = asyncio.run(get_completion_records_for_user("test_user"))
+# # for r in result:
+# #     print(r)
+# #     print(r.date.month)
 
-# result2 = asyncio.run(get_completion_records_for_user_for_this_month("test_user"))  
-# for r in result2:
-#     print(r)
+# # result2 = asyncio.run(get_completion_records_for_user_for_this_month("test_user"))  
+# # for r in result2:
+# #     print(r)
+
+# count = asyncio.run(sql.count_completion_records_for_user_for_activity("test_user2", "exercise"))
+# print(f"Count for test_user exercise: {count}")
+
+# get_activities = asyncio.run(sql.get_activities_for_user("test_user2"))
+# print(f"Activities for test_user: {get_activities}")
