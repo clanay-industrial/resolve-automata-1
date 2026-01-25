@@ -1,5 +1,6 @@
 from langchain.tools import tool
 
+
 in_memory_db = {}
 
 @tool('search_database')
