@@ -59,14 +59,9 @@ fastapi dev main.py
 ```
 
 TODO: 
-1. Finish off SQL DB Integration - DONE
 2. Hosting for API in Azure - App Service? 
     - how to deploy - manually 
-3. Quick web page with: 
-    - Intro
-    - Chat web page
-    - Database 
-4. README.md integration 
+
 4. WhatsApp Integration 
 5. Opik Integration 
 6. Improve features. 
@@ -84,3 +79,9 @@ TODO:
 7. Additional Features
     - Github Actions deploy 
     - 
+3. Quick web page with: 
+    - Intro
+    - Chat web page
+    - Database 
+4. README.md integration 
+5. Demo Video
