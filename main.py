@@ -1,4 +1,5 @@
 import os
+from urllib import response
 from dotenv  import load_dotenv
 from fastapi import FastAPI, Query, Response, Request
 from pydantic import BaseModel
@@ -36,6 +37,11 @@ async def activity(message: Message):
     response = await agent_service.process_message(message.user, message.message)
 
     return {"message": response.content, "user": message.user}
+
+@app.get("/health")
+async def health(response: Response):
+    response.status_code = 200
+    return {"status": "healthy"}
 
 
 @app.get("/api/whatsapp/", status_code=200)
