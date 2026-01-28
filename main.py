@@ -34,6 +34,8 @@ class Message(BaseModel):
 @app.post("/activity")
 async def activity(message: Message):
 
+    print(f"Processing activity message: {message}")
+
     response = await agent_service.process_message(message.user, message.message)
 
     return {"message": response.content, "user": message.user}
