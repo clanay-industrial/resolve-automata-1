@@ -61,10 +61,12 @@ DONE:
 2. DB integration
 2. Hosting for API in Azure - App Service? 
     - how to deploy - manually 
+4. Logging
+
 
 TODO: 
 4. WhatsApp Integration 
-4. Logging
+5. put in loop on SQL for start up 
 5. Opik Integration 
 6. Improve features. 
     - Alembic SQL db Migrations

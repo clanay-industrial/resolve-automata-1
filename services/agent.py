@@ -6,7 +6,7 @@ from langchain.agents import create_agent
 from langchain.messages import SystemMessage, HumanMessage
 from services.database_tools import search_database_for_user_activity, log_activity_to_database
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("resolveautomata")
 
 sytem_prompt = SystemMessage(
     content=[

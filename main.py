@@ -34,7 +34,7 @@ LOGGING["loggers"]["resolveautomata"] = {
 }
 
 logging.config.dictConfig(LOGGING)
-logger = logging.getLogger("diceautomata")
+logger = logging.getLogger("resolveautomata")
 
 logger.info("Starting FastAPI app :)")
 
@@ -53,7 +53,7 @@ class Message(BaseModel):
 @app.post("/activity")
 async def activity(message: Message):
 
-    logger.debug(f"Processing activity message: {message}")
+    logger.debug(f"Processing activity message: \n{message}")
 
     response = await agent_service.process_message(message.user, message.message)
 
