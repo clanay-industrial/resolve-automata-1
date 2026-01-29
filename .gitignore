@@ -1,5 +1,6 @@
 .env
 resolvevenv/
+message_examples/
 secrets.yaml
 
 .pytest_cache/

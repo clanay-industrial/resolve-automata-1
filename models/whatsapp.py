@@ -29,11 +29,39 @@ class MessageItem(BaseModel):
     text: Optional[TextContent]
 
 
+class ConversationOrigin(BaseModel):
+    type: Optional[str]
+
+
+class Conversation(BaseModel):
+    id: Optional[str]
+    origin: Optional[ConversationOrigin]
+    expiration_timestamp: Optional[str]
+
+
+class Pricing(BaseModel):
+    billable: Optional[bool]
+    pricing_model: Optional[str]
+    category: Optional[str]
+    type: Optional[str]
+
+
+class StatusItem(BaseModel):
+    id: Optional[str]
+    status: Optional[str]
+    timestamp: Optional[str]
+    recipient_id: Optional[str]
+    recipient_logical_id: Optional[str]
+    conversation: Optional[Conversation]
+    pricing: Optional[Pricing]
+
+
 class Value(BaseModel):
     messaging_product: Optional[str]
     metadata: Optional[Metadata]
     contacts: Optional[List[Contact]]
     messages: Optional[List[MessageItem]]
+    statuses: Optional[List[StatusItem]]
 
 
 class ChangeItem(BaseModel):
