@@ -6,6 +6,8 @@ from langchain.agents import create_agent
 from langchain.messages import SystemMessage, HumanMessage
 from services.database_tools import search_database_for_user_activity, log_activity_to_database
 
+logger = logging.getLogger(__name__)
+
 sytem_prompt = SystemMessage(
     content=[
         {
@@ -49,7 +51,9 @@ class AgentService:
             "messages": [{"role": "user", "content": f"{message} from {user}"}]
         })
 
-        print(response)
+        logger.debug("Agent response:")
+        logger.debug(response)
+        
         return response['messages'][-1]
     
     # async def model_call(self, prompt: str) -> str:

@@ -57,12 +57,14 @@ fastapi dev main.py
 # http://localhost:8000/docs
 
 ```
-
-TODO: 
+DONE:
+2. DB integration
 2. Hosting for API in Azure - App Service? 
     - how to deploy - manually 
 
+TODO: 
 4. WhatsApp Integration 
+4. Logging
 5. Opik Integration 
 6. Improve features. 
     - Alembic SQL db Migrations
