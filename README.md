@@ -63,10 +63,11 @@ DONE:
     - how to deploy - manually 
 4. Logging
 4. WhatsApp Integration 
+5. Whatsapp Publish - new number
+5. put in loop on SQL for start up - retries for Operational Errors in sql   
+
 
 TODO: 
-5. Whatsapp Publish - new number
-5. put in loop on SQL for start up 
 5. Build new user flow
 5. Opik Integration 
     - Tutorial https://colab.research.google.com/drive/14NRe_5sLXrXoqrOWXxrEz1qnY7mG_ul6#scrollTo=S7C5EwN6LFR2 

@@ -147,7 +147,7 @@ async def post_message(request: Request, response: Response):
         whatsapp_business_id=whatsapp_business_phone_number_id,
         whatsapp_authtoken=whatsapp_token, 
         user_phone_number=customer, 
-        message=message)
+        message=response.content)
 
     response.status_code = 200
     return response
