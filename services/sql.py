@@ -58,10 +58,20 @@ engine = create_engine(
 # AutoGenerateID 
 class CompletionRecord(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
-    create_at: datetime = Field(default_factory=lambda: datetime.now(tz=timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(tz=timezone.utc))
+    user_id: int # GUID?
     user: str
     date: date
     activity: str
+
+class UserRecord(SQLModel, table=True):
+    id: int = Field(default=None, primary_key=True) # GUID
+    last_modified: datetime = Field(default_factory=lambda: datetime.now(tz=timezone.utc))
+    user: str
+    phone_num: int
+    date_joined: date
+    prefernces: str     # make a long string
+
     
 
 def create_db_and_tables():

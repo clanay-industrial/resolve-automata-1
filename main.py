@@ -5,12 +5,12 @@ from uvicorn.config import LOGGING_CONFIG as UVICORN_LOGGING_CONFIG
 from urllib import response
 from dotenv  import load_dotenv
 from fastapi import FastAPI, Query, Response, Request
-from pydantic import BaseModel
 from typing import Annotated
 
 load_dotenv()
 
 # from services.sql import engine
+from models.utility_models import Message  
 from services.agent import agent_service
 from models.whatsapp import WhatsAppWebhook_Message
 from models.hub import Hub
@@ -44,11 +44,6 @@ app = FastAPI()
 async def root():
     logger.debug("Root endpoint called")
     return {"message": "Hello World"}
-
-
-class Message(BaseModel):
-    user: str
-    message: str
 
 @app.post("/activity")
 async def activity(message: Message):
@@ -135,15 +130,17 @@ async def post_message(request: Request, response: Response):
 
     logger.debug("Received message:")
     logger.debug(message.text.body)
-    # print("Received message:")
-    # print(message.text.body)
 
-    # message = generate_response(message.text.body)
+
+    response = await agent_service.process_message(message.user, message.message)
+
+    # return {"message": response.content, "user": message.user}
+
 
     # Replace with formatted Agent Response 
-    message = "dummy message"
+    # message = "dummy message"
 
-    logger.debug(f"Response message:\n{message}")
+    logger.debug(f"Response message: {response.content}")
     # print(f"Response message:\n{message}")
 
     await send_whatsapp_textonly_message(
