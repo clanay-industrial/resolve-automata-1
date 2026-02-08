@@ -129,10 +129,10 @@ async def post_message(request: Request, response: Response):
     customer = message.from_
 
     logger.debug("Received message:")
+    logger.debug(message)
     logger.debug(message.text.body)
 
-
-    response = await agent_service.process_message(message.user, message.message)
+    response = await agent_service.process_message(customer, message.text.body)
 
     # return {"message": response.content, "user": message.user}
 

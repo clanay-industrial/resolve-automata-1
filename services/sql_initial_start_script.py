@@ -9,7 +9,7 @@ with sql.engine.connect() as conn:
     print("Connected OK")
 
 # print("Removing database and tables...")
-# remove_all_tables()
+remove_all_tables()
 
 print("Creating database and tables...")
 create_db_and_tables()
