@@ -70,9 +70,9 @@ class UserRecord(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True) # GUID
     last_modified: datetime = Field(default_factory=lambda: datetime.now(tz=timezone.utc))
     user: str
-    phone_num: int
+    phone_num: str
     date_joined: date
-    preferences: str     # make a long string
+    preferences: str | None = None     # make a long string
 
     
 def create_db_and_tables():
@@ -175,3 +175,56 @@ async def get_completion_records_for_user_for_this_month(user: str):
         )
         results = session.exec(statement)
         return results.all()
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
+async def count_completion_records_for_user_for_activity_for_month(user: str, activity: str) -> int:
+    with Session(engine) as session:
+        now = date.today()
+        first_of_month = date(now.year, now.month, 1)
+
+        statement = (
+            select(func.count())
+            .select_from(CompletionRecord)
+            .where(CompletionRecord.user == user)
+            .where(CompletionRecord.activity == activity)
+            .where(CompletionRecord.date >= first_of_month)
+        )
+        result = session.exec(statement).one()
+        return int(result)
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
+async def does_user_exist(user: str) -> bool:
+    with Session(engine) as session:
+        statement = (
+            select(func.count())
+            .select_from(UserRecord)
+            .where(UserRecord.user == user)
+        )
+        result = session.exec(statement).one()
+        return int(result) > 0
+    
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
+async def create_user(user: str, phone_num: str) -> bool:
+    with Session(engine) as session:
+        user_record = UserRecord(
+            user = user,
+            phone_num = phone_num,
+            date_joined = date.today(),
+            preferences = None
+        )
+        session.add(user_record)
+        session.commit()
+        return True

@@ -94,3 +94,4 @@ TODO:
     - Database 
 4. README.md integration 
 5. Demo Video
+6. Deal with Changing Phone numbers. 

@@ -17,6 +17,7 @@ from models.hub import Hub
 from services.whatsapp_utility import strip_whatsapp_token
 from services.whatsapp_api import send_whatsapp_textonly_message
 import services.sql
+from models.welcome_message import welcome_message
 
 # import whatsapp_routes.py
 
@@ -110,7 +111,7 @@ async def post_message(request: Request, response: Response):
         # print(body)
         response.status_code = 500
         return response
-    
+
     if converted_body is None:
         response.status_code = 400
         return response
@@ -135,11 +136,25 @@ async def post_message(request: Request, response: Response):
     logger.debug(message)
     logger.debug(message.text.body)
 
+    
+    if_user_exists = await services.sql.does_user_exist(customer)
+
+    if not if_user_exists:
+        logger.info(f"User {customer} does not exist in database, creating new user")
+        await services.sql.create_user(customer, customer)
+
+        logger.debug(f"New user created in database - {customer}")
+
+        await send_whatsapp_textonly_message(
+        whatsapp_business_id=whatsapp_business_phone_number_id,
+        whatsapp_authtoken=whatsapp_token, 
+        user_phone_number=customer, 
+        message=welcome_message)
+
+
     response = await agent_service.process_message(customer, message.text.body)
 
     # return {"message": response.content, "user": message.user}
-
-
     # Replace with formatted Agent Response 
     # message = "dummy message"
 
