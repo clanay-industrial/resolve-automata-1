@@ -70,10 +70,9 @@ class UserRecord(SQLModel, table=True):
     user: str
     phone_num: int
     date_joined: date
-    prefernces: str     # make a long string
+    preferences: str     # make a long string
 
     
-
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
@@ -141,7 +140,6 @@ async def get_completion_records_for_user_for_this_month(user: str):
     # NEED an and statement to get all records for this month so far
         now = date.today()
         first_of_month = date(now.year, now.month, 1)
-
 
         statement = (
             select(CompletionRecord)
