@@ -6,6 +6,8 @@ from sqlmodel import Field, Session, SQLModel, create_engine, select
 # from azure.identity import DefaultAzureCredential
 from sqlalchemy.pool import QueuePool
 from sqlalchemy import func
+from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
+from sqlalchemy.exc import OperationalError
 
 # Get environment variables for service principal
 tenant_id = os.environ.get("AZURE_TENANT_ID")
@@ -88,6 +90,11 @@ def remove_all_tables():
 
 # SessionDep = Annotated[Session, Depends(get_session)]
 
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
 async def create_completion_record(user: str, activity: str):
     completion_record = CompletionRecord(
         user = user,
@@ -102,6 +109,11 @@ async def create_completion_record(user: str, activity: str):
 
         return None 
     
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
 async def get_completion_records_for_user(user: str):
     with Session(engine) as session:
         statement = (
@@ -111,6 +123,11 @@ async def get_completion_records_for_user(user: str):
         results = session.exec(statement)
         return results.all()
     
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
 async def get_activities_for_user(user: str) -> str:
     with Session(engine) as session:
         statement = (
@@ -124,6 +141,11 @@ async def get_activities_for_user(user: str) -> str:
 
         return ", ".join(activities)
     
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
 async def count_completion_records_for_user_for_activity(user: str, activity: str) -> int:
     with Session(engine) as session:
         statement = (
@@ -135,6 +157,11 @@ async def count_completion_records_for_user_for_activity(user: str, activity: st
         result = session.exec(statement).one()
         return int(result)
 
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
 async def get_completion_records_for_user_for_this_month(user: str):
     with Session(engine) as session:
     # NEED an and statement to get all records for this month so far

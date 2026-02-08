@@ -11,3 +11,4 @@ pyodbc
 pydantic
 azure-identity
 sqlalchemy
+tenacity
