@@ -110,15 +110,18 @@ async def post_message(request: Request, response: Response):
         # print(body)
         response.status_code = 500
         return response
-
+    
     if converted_body is None:
         response.status_code = 400
         return response
     
     if converted_body.entry[0].changes[0].value.statuses is not None:
-        if converted_body.entry[0].changes[0].value.statuses[0].pricing.billable:
+        logger.debug(converted_body.entry[0].changes[0].value.statuses[0])
+        
+        status = converted_body.entry[0].changes[0].value.statuses[0]
+        if status.pricing is not None and status.pricing.billable:
             logger.info("Message was billable")
-            logger.info(converted_body.entry[0].changes[0].value.statuses[0].pricing)
+            logger.info(status.pricing)
             
         logger.debug("Received status update - ignoring")
         response.status_code = 200
