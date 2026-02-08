@@ -70,9 +70,9 @@ class UserRecord(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True) # GUID
     last_modified: datetime = Field(default_factory=lambda: datetime.now(tz=timezone.utc))
     user: str
-    phone_num: int
+    phone_num: str
     date_joined: date
-    preferences: str     # make a long string
+    preferences: str | None = None     # make a long string
 
     
 def create_db_and_tables():
@@ -195,3 +195,36 @@ async def count_completion_records_for_user_for_activity_for_month(user: str, ac
         )
         result = session.exec(statement).one()
         return int(result)
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
+async def does_user_exist(user: str) -> bool:
+    with Session(engine) as session:
+        statement = (
+            select(func.count())
+            .select_from(UserRecord)
+            .where(UserRecord.user == user)
+        )
+        result = session.exec(statement).one()
+        return int(result) > 0
+    
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
+async def create_user(user: str, phone_num: str) -> bool:
+    with Session(engine) as session:
+        user_record = UserRecord(
+            user = user,
+            phone_num = phone_num,
+            date_joined = date.today(),
+            preferences = None
+        )
+        session.add(user_record)
+        session.commit()
+        return True
