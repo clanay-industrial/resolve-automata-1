@@ -175,3 +175,23 @@ async def get_completion_records_for_user_for_this_month(user: str):
         )
         results = session.exec(statement)
         return results.all()
+
+@retry(
+    stop=stop_after_attempt(5),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+    retry=retry_if_exception_type(OperationalError)
+)
+async def count_completion_records_for_user_for_activity_for_month(user: str, activity: str) -> int:
+    with Session(engine) as session:
+        now = date.today()
+        first_of_month = date(now.year, now.month, 1)
+
+        statement = (
+            select(func.count())
+            .select_from(CompletionRecord)
+            .where(CompletionRecord.user == user)
+            .where(CompletionRecord.activity == activity)
+            .where(CompletionRecord.date >= first_of_month)
+        )
+        result = session.exec(statement).one()
+        return int(result)

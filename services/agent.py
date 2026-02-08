@@ -4,7 +4,7 @@ import logging
 from langchain_azure_ai.chat_models import AzureAIChatCompletionsModel
 from langchain.agents import create_agent
 from langchain.messages import SystemMessage, HumanMessage
-from services.database_tools import search_database_for_user_activity, log_activity_to_database
+from services.database_tools import search_database_for_user_activity, log_activity_to_database, count_activity_for_user_this_month 
 
 logger = logging.getLogger("resolveautomata")
 
@@ -40,7 +40,7 @@ system_prompt2 = SystemMessage(
             If the activity the user mentions is similar to what the user has in the database already, then use the same activity name for the log.
 
             When responding to a user's message, keep the response short and concise. 
-            If you logged their progress, then tell them that you have logged their progress and give them feedback on how they are doing that month.
+            If you logged their progress, then tell them that you have logged their progress and give them feedback on how they are doing that month using the count_activity_for_user_this_month tool.
             """,
         }
     ]
@@ -62,7 +62,7 @@ class AgentService:
         self.agent = create_agent(
             model=self.model,
             system_prompt=system_prompt2,
-            tools=[search_database_for_user_activity, log_activity_to_database]
+            tools=[search_database_for_user_activity, log_activity_to_database, count_activity_for_user_this_month]
         )
         
     async def process_message(self, user: str, message: str) -> str:
