@@ -151,6 +151,9 @@ async def post_message(request: Request, response: Response):
         user_phone_number=customer, 
         message=welcome_message)
 
+        response.status_code = 200
+        return response
+
 
     response = await agent_service.process_message(customer, message.text.body)
 

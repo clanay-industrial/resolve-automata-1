@@ -5,8 +5,13 @@ from langchain_azure_ai.chat_models import AzureAIChatCompletionsModel
 from langchain.agents import create_agent
 from langchain.messages import SystemMessage, HumanMessage
 from services.database_tools import search_database_for_user_activity, log_activity_to_database, count_activity_for_user_this_month 
+import opik
+from opik.integrations.langchain import OpikTracer
 
 logger = logging.getLogger("resolveautomata")
+
+# Initialize Opik tracer for LangChain
+opik_tracer = OpikTracer(tags=["resolveautomata", "whatsapp-agent"])
 
 system_prompt = SystemMessage(
     content=[
@@ -65,11 +70,17 @@ class AgentService:
             tools=[search_database_for_user_activity, log_activity_to_database, count_activity_for_user_this_month]
         )
         
+    @opik.track(name="process_message", tags=["agent"])
     async def process_message(self, user: str, message: str) -> str:
         """Process a message through the LangChain agent"""
-        response = await self.agent.ainvoke({
-            "messages": [{"role": "user", "content": f"{message} from {user}"}]
-        })
+        
+        # Log metadata to Opik
+        opik.track_metadata({"user": user, "message_length": len(message)})
+        
+        response = await self.agent.ainvoke(
+            {"messages": [{"role": "user", "content": f"{message} from {user}"}]},
+            config={"callbacks": [opik_tracer]}
+        )
 
         logger.debug("Agent response:")
         logger.debug(response)
