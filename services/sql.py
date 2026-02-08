@@ -61,7 +61,7 @@ engine = create_engine(
 class CompletionRecord(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
     created_at: datetime = Field(default_factory=lambda: datetime.now(tz=timezone.utc))
-    user_id: int # GUID?
+    user_id: int | None = None  # GUID?
     user: str
     date: date
     activity: str
