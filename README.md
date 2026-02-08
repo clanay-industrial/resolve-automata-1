@@ -62,12 +62,16 @@ DONE:
 2. Hosting for API in Azure - App Service? 
     - how to deploy - manually 
 4. Logging
-
+4. WhatsApp Integration 
 
 TODO: 
-4. WhatsApp Integration 
+5. Whatsapp Publish - new number
 5. put in loop on SQL for start up 
+5. Build new user flow
 5. Opik Integration 
+    - Tutorial https://colab.research.google.com/drive/14NRe_5sLXrXoqrOWXxrEz1qnY7mG_ul6#scrollTo=S7C5EwN6LFR2 
+    - Put it in place 
+
 6. Improve features. 
     - Alembic SQL db Migrations
     - Sign up system 

@@ -2,6 +2,7 @@
 resolvevenv/
 message_examples/
 secrets.yaml
+scratch
 
 .pytest_cache/
 
