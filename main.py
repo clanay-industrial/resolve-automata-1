@@ -150,15 +150,15 @@ async def post_message(request: Request, response: Response):
         return response
 
 
-    response = await agent_service.process_message(customer, message.text.body)
+    agent_response = await agent_service.process_message(customer, message.text.body)
 
-    logger.debug(f"Response message: {response.content}")
+    logger.debug(f"Response message: {agent_response.content}")
 
     await send_whatsapp_textonly_message(
         whatsapp_business_id=whatsapp_business_phone_number_id,
         whatsapp_authtoken=whatsapp_token, 
         user_phone_number=customer, 
-        message=response.content)
+        message=agent_response.content)
 
     response.status_code = 200
     return response
