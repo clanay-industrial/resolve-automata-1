@@ -11,7 +11,7 @@ from opik.integrations.langchain import OpikTracer
 logger = logging.getLogger("resolveautomata")
 
 # Initialize Opik tracer for LangChain
-opik_tracer = OpikTracer(tags=["resolveautomata", "whatsapp-agent"])
+opik_tracer = OpikTracer(project_name="resolve", tags=["resolveautomata", "whatsapp-agent"])
 
 system_prompt = SystemMessage(
     content=[
@@ -70,16 +70,13 @@ class AgentService:
             tools=[search_database_for_user_activity, log_activity_to_database, count_activity_for_user_this_month]
         )
         
-    @opik.track(name="process_message", tags=["agent"])
+    @opik.track(name="process_message", tags=["agent"], metadata={"service": "whatsapp_agent"})
     async def process_message(self, user: str, message: str) -> str:
         """Process a message through the LangChain agent"""
         
-        # Log metadata to Opik
-        opik.track_metadata({"user": user, "message_length": len(message)})
-        
         response = await self.agent.ainvoke(
             {"messages": [{"role": "user", "content": f"{message} from {user}"}]},
-            config={"callbacks": [opik_tracer]}
+            config={"callbacks": [opik_tracer], "metadata": {"user": user}}
         )
 
         logger.debug("Agent response:")
