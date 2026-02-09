@@ -45,6 +45,9 @@ async def root():
 
 @app.post("/activity")
 async def activity(message: Message):
+    if message.auth_token != whatsapp_token:
+        logger.warning("Unauthorized access attempt with invalid auth token")
+        return Response(status_code=403, content="Forbidden")
 
     logger.debug(f"Processing activity message: {message}")
 
