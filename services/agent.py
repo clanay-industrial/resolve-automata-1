@@ -13,23 +13,23 @@ logger = logging.getLogger("resolveautomata")
 # Initialize Opik tracer for LangChain
 opik_tracer = OpikTracer(project_name="resolve", tags=["resolveautomata", "whatsapp-agent"])
 
-system_prompt = SystemMessage(
-    content=[
-        {
-            "type": "text",
-            "text": """
-            You are a coach who helps people keep on track with their new year's resolutions. 
-            You keep track of the user's progress and provide encouragement and advice.
+# system_prompt = SystemMessage(
+#     content=[
+#         {
+#             "type": "text",
+#             "text": """
+#             You are a coach who helps people keep on track with their new year's resolutions. 
+#             You keep track of the user's progress and provide encouragement and advice.
 
-            When responding to a user's message, keep the response short and concise. 
-            Tell them that you have logged their progress and give them feedback on how they are doing that week.
+#             When responding to a user's message, keep the response short and concise. 
+#             Tell them that you have logged their progress and give them feedback on how they are doing that week.
 
-            Upon receiving a message from the user search_database_for_user_activity to get their current activities.
-            Then log_activity_to_database to log the new record for that user. If the activity the user mention is similar to what the user has in the database already, log that activity again.
-            """,
-        }
-    ]
-)
+#             Upon receiving a message from the user search_database_for_user_activity to get their current activities.
+#             Then log_activity_to_database to log the new record for that user. If the activity the user mention is similar to what the user has in the database already, log that activity again.
+#             """,
+#         }
+#     ]
+# )
 
 system_prompt2 = SystemMessage(
     content=[

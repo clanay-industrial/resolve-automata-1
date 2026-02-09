@@ -3,7 +3,6 @@ from typing import Annotated
 from datetime import date, datetime, timezone
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
-# from azure.identity import DefaultAzureCredential
 from sqlalchemy.pool import QueuePool
 from sqlalchemy import func
 from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
@@ -15,16 +14,6 @@ client_id = os.environ.get("AZURE_CLIENT_ID")
 client_secret = os.environ.get("AZURE_CLIENT_SECRET")
 server_name = os.environ.get("AZURE_SQL_SERVER_NAME")
 database_name = os.environ.get("AZURE_SQLDB_NAME")
-
-# Initialize service principal credential
-# credential = DefaultAzureCredential()
-# #     tenant_id=tenant_id,
-# #     client_id=client_id,
-# #     client_secret=client_secret
-# # )
-
-# # Get access token for Azure SQL Database
-# token = credential.get_token("https://database.windows.net/.default")
 
 # Build connection string with Entra ID
 # Linux installation instruction for ODBC Driver https://learn.microsoft.com/en-us/sql/connect/odbc/linux-mac/installing-the-microsoft-odbc-driver-for-sql-server?view=sql-server-ver17&tabs=ubuntu18-install%2Calpine17-install%2Cdebian8-install%2Credhat7-13-install%2Crhel7-offline#microsoft-odbc-18
@@ -51,12 +40,6 @@ engine = create_engine(
     echo=False
 )
 
-# class UserProgress(SQLModel, table=True):
-#     id: int = Field(default=None, primary_key=True)
-#     user: str
-#     week_total: int
-#     activity: str
-
 # AutoGenerateID 
 class CompletionRecord(SQLModel, table=True):
     id: int = Field(default=None, primary_key=True)
@@ -79,16 +62,8 @@ def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
 
 def remove_all_tables():
-    # This deletes EVERY table defined in your SQLModel metadata
     SQLModel.metadata.drop_all(engine)
 
-# TODO: Fix session management and dependency injection
-# def get_session():
-#     with Session(engine) as session:
-#         yield session
-
-
-# SessionDep = Annotated[Session, Depends(get_session)]
 
 @retry(
     stop=stop_after_attempt(5),

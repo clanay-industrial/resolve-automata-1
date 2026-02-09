@@ -9,7 +9,6 @@ from typing import Annotated
 
 load_dotenv()
 
-# from services.sql import engine
 from models.utility_models import Message  
 from services.agent import agent_service
 from models.whatsapp import WhatsAppWebhook_Message
@@ -18,8 +17,6 @@ from services.whatsapp_utility import strip_whatsapp_token
 from services.whatsapp_api import send_whatsapp_textonly_message
 import services.sql
 from models.welcome_message import welcome_message
-
-# import whatsapp_routes.py
 
 whatsapp_token = os.environ.get('WHATSAPP_TOKEN')
 whatsapp_business_phone_number_id = os.environ.get('WHATSAPP_BUSINESS_PHONE_NUMBER_ID')
@@ -69,7 +66,6 @@ def token_verify(
         response: Response
     ):
         logger.info(hub)
-        # print(hub)
         
         if hub.hub_mode == "None":
             response.status_code = 200
@@ -83,7 +79,6 @@ def token_verify(
 
         if hub.hub_mode == "subscribe" and stripped_hub_verify_token == whatsapp_token:
             logger.info("Webhook verified")
-            # print("Webhook verified")
             return Response(content=hub.hub_challenge or "", media_type="text/plain")
 
         response.status_code = 403
@@ -94,7 +89,6 @@ def token_verify(
 async def post_message(request: Request, response: Response):
     # Log a small summary (timestamp is not present at top level in this payload)
     logger.debug("\n\nWebhook received payload:\n")
-    # print("\n\nWebhook received payload:\n")
 
     # Return 200 with no body to match the original JS behaviour
     body = await request.body()
@@ -106,9 +100,7 @@ async def post_message(request: Request, response: Response):
         logger.warning(f"Failed to parse WhatsAppWebhook_Message")
         logger.debug(e)
         logger.debug(body)
-        # print(f"Failed to parse WhatsAppWebhook_Message")
-        # print(e)
-        # print(body)
+
         response.status_code = 500
         return response
 
@@ -157,12 +149,7 @@ async def post_message(request: Request, response: Response):
 
     response = await agent_service.process_message(customer, message.text.body)
 
-    # return {"message": response.content, "user": message.user}
-    # Replace with formatted Agent Response 
-    # message = "dummy message"
-
     logger.debug(f"Response message: {response.content}")
-    # print(f"Response message:\n{message}")
 
     await send_whatsapp_textonly_message(
         whatsapp_business_id=whatsapp_business_phone_number_id,
